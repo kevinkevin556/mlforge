@@ -1,6 +1,7 @@
 # pyforge
 
 [![Build Status](https://travis-ci.com/kevinkevin556/pyforge.svg?branch=master)](https://travis-ci.com/kevinkevin556/pyforge)
+[![codecov](https://codecov.io/gh/kevinkevin556/pyforge/branch/master/graph/badge.svg)](https://codecov.io/gh/kevinkevin556/pyforge)
 
 ## Overview
 
