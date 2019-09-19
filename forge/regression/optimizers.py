@@ -4,10 +4,13 @@ from ..base.optimizers import Optimizer
 from ..utils.data_utils import set_eval_data, add_bias_term
 from ..utils.initialize_utils import initialize_weight
 
+# @alias_class(GD)
+# @alias_str(["gd", "gradientdescent", "GD", "GradientDescent"])
 class GradientDescent(Optimizer):
-    def __init__(self, learning_rate):
+    def __init__(self, learning_rate=None, lr=None):
         self.parameters = {}
-        self.parameters['lr'] = learning_rate
+        self.parameters['lr'] = learning_rate if lr is not None else lr 
+        # lr is the abbreviation for "learning rate"
 
     def execute(self, x, y, loss, activation):
         x, y = set_eval_data((x, y))
@@ -24,10 +27,12 @@ class GradientDescent(Optimizer):
                 w = update
         return w
 
+# @alias_class(SGD)
+# @alias_str(["sgd", " stochasticgradientdescent", "SGD", "StochasticGradientDescent"])
 class StochasticGradientDescent(Optimizer):
-    def __init__(self, learning_rate):
+    def __init__(self, learning_rate=None, lr=None):
         self.parameters = {}
-        self.parameters['lr'] = learning_rate
+        self.parameters['lr'] = learning_rate if lr is not None else lr 
 
     def execute(self, x, y, loss, activation):
         x, y = set_eval_data((x, y))
@@ -46,11 +51,11 @@ class StochasticGradientDescent(Optimizer):
                     w = update
         return w
 
-
+# @alias_str(["Adagrad", "adagrad"])
 class Adagrad(Optimizer):
-    def __init__(self, learning_rate):
+    def __init__(self, learning_rate=None, lr=None):
         self.parameters = {}
-        self.parameters['lr'] = learning_rate
+        self.parameters['lr'] = learning_rate if lr is not None else lr 
     
     def execute(self, x, y, loss, activation):
         x, y = set_eval_data((x, y))

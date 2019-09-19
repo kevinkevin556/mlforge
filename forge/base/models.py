@@ -10,11 +10,18 @@ class Model(object):
 	"""
 
 	def __init__(self):
+		"""
+		items collected in __init__() are immtutable, 
+		ie. you won't change them by calling compile().
+		"""
 		self.weight = None
 		self.activation = lambda x, w: None
-
-	def compile(self, loss, optimizer, metrics):
 		self.loss = loss
+
+	def compile(self, optimizer, metrics):
+		"""
+		Use compile() function to set those mutatable items.
+		"""
 		self.optimizer = optimizer 
 		self.metrics = metrics
 
@@ -31,7 +38,7 @@ class Model(object):
 	def evaluate(self, x_test, y_test):
 		res = []
 		for m in self.metrics:
-			res.append(m.eval(self.functional_form(x_test, self.weight), y_test))
+			res.append(m.eval(self.activation(x_test, self.weight), y_test))
 		return res
 
 	def predict(self, x_test):

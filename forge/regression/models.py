@@ -6,11 +6,12 @@ from ..losses import MeanSquareError
 
 class LinearReg(Model):
     def __init__(self, optimizer=None):
-        self.optimizer = None
         self.weight = None
-        self.metrics = [MeanSquareError()]
         self.loss = MeanSquareError()
         self.activation = Linear()
+        
+        self.metrics = [MeanSquareError()]
+        self.optimizer = None
         self.compile(optimizer)
 
     def compile(self, optimizer):
