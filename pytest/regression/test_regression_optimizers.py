@@ -3,10 +3,10 @@ import pytest
 import sys
 sys.path.append("../")
 
-from forge.regression.optimizers import AnalyticSolution, GradientDescent, StocasticGradientDescent
-from forge.utils.data_utils import add_cons
-from forge.losses import MeanSquaredError, ZeroOneError, CrossEntropyError
-from forge.regularizers import L2
+from mlforge.regression.optimizers import AnalyticSolution, GradientDescent, StocasticGradientDescent
+from mlforge.utils.data_utils import add_cons
+from mlforge.losses import MeanSquaredError, ZeroOneError, CrossEntropyError
+from mlforge.regularizers import L2
 
 # fixture
 

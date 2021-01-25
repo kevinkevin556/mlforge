@@ -2,7 +2,7 @@ import numpy as np
 import sys
 sys.path.append("../..")
 
-from forge.utils.data_utils import *
+from mlforge.utils.data_utils import *
 
 def test_add_cons():
     # arrange 

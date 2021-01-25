@@ -4,8 +4,8 @@ import sys
 sys.path.append("../..")
 from sklearn.datasets import make_moons, make_classification, make_regression
 
-from forge.impurities import GiniIndex, MeanSquaredError, Entropy
-from forge.tree.optimizers import DecisionStumpSolver, CART, ID3
+from mlforge.impurities import GiniIndex, MeanSquaredError, Entropy
+from mlforge.tree.optimizers import DecisionStumpSolver, CART, ID3
 
 
 @pytest.fixture

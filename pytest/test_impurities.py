@@ -3,7 +3,7 @@ import pytest
 import sys
 sys.path.append("./")
 
-from forge.impurities import *
+from mlforge.impurities import *
 
 
 # fixtures

@@ -4,9 +4,9 @@ import sys
 sys.path.append("../")
 
 from sklearn.datasets import make_moons
-from forge.ensemble.models import *
-from forge.perceptron.optimizers import Pocket
-from forge.utils.operation_utils import sign
+from mlforge.ensemble.models import *
+from mlforge.perceptron.optimizers import Pocket
+from mlforge.utils.operation_utils import sign
 
 
 def test_bagging_pocket():

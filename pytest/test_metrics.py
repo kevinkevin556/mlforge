@@ -3,7 +3,7 @@ import pytest
 import sys
 sys.path.append("./")
 
-from forge.metrics import Accuracy
+from mlforge.metrics import Accuracy
 
 
 def test_accracy():

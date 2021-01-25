@@ -4,8 +4,8 @@ import sys
 sys.path.append("../")
 from sklearn.datasets import make_classification
 
-from forge.tree.models import *
-from forge.utils.operation_utils import sign
+from mlforge.tree.models import *
+from mlforge.utils.operation_utils import sign
 
 
 # fixtures

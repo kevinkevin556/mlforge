@@ -8,11 +8,11 @@ from sklearn.datasets import make_classification
 from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import Pipeline
 
-from forge.perceptron.models import Perceptron, Adaline
-from forge.perceptron.optimizers import Pocket, GradientDescent
-from forge.utils.data_utils import add_cons
-from forge.utils.operation_utils import sign
-from forge.losses import ZeroOneError
+from mlforge.perceptron.models import Perceptron, Adaline
+from mlforge.perceptron.optimizers import Pocket, GradientDescent
+from mlforge.utils.data_utils import add_cons
+from mlforge.utils.operation_utils import sign
+from mlforge.losses import ZeroOneError
 
 
 def test_perceptron_model():

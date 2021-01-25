@@ -6,8 +6,8 @@ from sklearn.svm import SVC
 from sklearn.datasets import make_blobs
 
 
-from forge.svm.models import HardMarginSVM, SoftMarginSVM, ProbabilisticSVM
-from forge.kernels import Linear, Gaussian
+from mlforge.svm.models import HardMarginSVM, SoftMarginSVM, ProbabilisticSVM
+from mlforge.kernels import Linear, Gaussian
 
 # fixture
 

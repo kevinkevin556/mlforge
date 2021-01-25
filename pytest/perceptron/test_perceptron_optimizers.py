@@ -4,10 +4,10 @@ import pytest
 import sys
 sys.path.append("../")
 
-from forge.perceptron.optimizers import LinearSeparable, Pocket, GradientDescent
-from forge.utils.data_utils import add_cons
-from forge.utils.operation_utils import sign
-from forge.losses import ZeroOneError
+from mlforge.perceptron.optimizers import LinearSeparable, Pocket, GradientDescent
+from mlforge.utils.data_utils import add_cons
+from mlforge.utils.operation_utils import sign
+from mlforge.losses import ZeroOneError
 
 # Fixtures
 

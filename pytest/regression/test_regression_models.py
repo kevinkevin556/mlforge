@@ -5,9 +5,9 @@ sys.path.append("../..")
 import sklearn.linear_model as skl
 
 
-from forge.regression.models import LinearRegression, LogisticRegression, RidgeRegression
-from forge.regression.optimizers import GradientDescent, StocasticGradientDescent
-from forge.regularizers import L2
+from mlforge.regression.models import LinearRegression, LogisticRegression, RidgeRegression
+from mlforge.regression.optimizers import GradientDescent, StocasticGradientDescent
+from mlforge.regularizers import L2
 
 # fixture
 
