@@ -1,9 +1,15 @@
 site_name: mlforge
 theme:
   name: material
+  language: Zh-TW
 nav:
 - 簡介: index.md
 - 建立自定義模型: create-your-model.md
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
+extra:
+  alternate:
+    - name: English
+      link: <your-site>/en/
+      lang: en
