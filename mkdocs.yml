@@ -1,4 +1,5 @@
 site_name: mlforge
+site_url: https://kevinkevin556.github.io/mlforge
 theme:
   name: material
   language: Zh-TW
