@@ -56,12 +56,12 @@ class MetaAlgorithm(metaclass = abc.ABCMeta):
         for model in self.base_models:
             model.compile(**model_config)
 
-            if type(model.__estimator_type__) == str:
-                types.append(model.__estimator_type__)
-            elif hasattr(model.__estimator_type__, "__iter__"):
-                types = types + list(model.__estimator_type__)
+            if type(model.model_type) == str:
+                types.append(model.model_type)
+            elif hasattr(model.model_type, "__iter__"):
+                types = types + list(model.model_type)
             else:
-                raise ValueError("Invalid __estimator_type__")
+                raise ValueError("Invalid model_type")
         
         # Set meta-algorithm estimator_type 
         types = set(types)
@@ -70,7 +70,7 @@ class MetaAlgorithm(metaclass = abc.ABCMeta):
         elif len(types) == 1:
             self.estimator_type = types.pop()
         else:
-            msg = "The applied models in the meta-algorithm should own identical __estimator_type__."
+            msg = "The applied models in the meta-algorithm should own identical model_type."
             raise Exception(msg)
 
 # Scikit-learn compatible API #

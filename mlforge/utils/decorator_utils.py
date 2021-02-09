@@ -1,22 +1,27 @@
 import numpy as np
 import numba
 
-from .jitpickle_utils import jitpickle
+from .alias_utils import add_alias
 
 
 def abstractmethod(func):
     return func
 
 
-def implementation(numba_jit=True, multiple_func_impl=False, **kwargs):
+def alias(aliases):
+    def class_wrapper(obj_class):
+        add_alias(aliases, obj_class)
+        return obj_class
+
+    return class_wrapper
+
+
+def implementation(tag="", compile="numba", **kwargs):
     def func_wrapper(func):
-        if numba_jit:
-            return staticmethod(numba.jit(nopython=True, **kwargs)(func))
-        elif multiple_func_impl:
+        if compile == None:
             return func
-        else:
-            return staticmethod(func)
-            
+        if compile == "numba":
+            return staticmethod(numba.jit(nopython=True, **kwargs)(func))
     return func_wrapper
 
 
@@ -30,7 +35,9 @@ def fit_method(func):
                 return X
 
         def data_class_encode(self, y):
-            if self.__estimator_type__ == "binary_classification":
+            if self.model_type in ["regressor", "multiclass-classifier"]:
+                return y
+            if self.model_type == "binary-classifier":
                 values = np.unique(y)
                 n_class = len(values)
                 if n_class > 2:
@@ -42,8 +49,6 @@ def fit_method(func):
                     new_y[y==values[0]] = -1
                     new_y[y==values[1]] = 1
                     return new_y
-            else:
-                return y
 
         X = check_2d(X)
         new_y = data_class_encode(self, y)
@@ -60,18 +65,12 @@ def predict_method(func):
             output[y_pred == 1] = value_encoding[1]
             return output
         
-        if self.__estimator_type__ == "binary_classification":
+        if self.model_type == "binary-classifier":
             value_encoding = self.classes_
             output = data_class_decode(func(self, X, **kwargs))
         else:
-            output = func(self, X, **kwargs)
+            output = func(self, X, **kwargs)    
         
         return output
 
     return func_wrapper
-
-
-
-
-
-

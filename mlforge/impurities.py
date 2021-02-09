@@ -8,7 +8,7 @@ from .metrics import Metric
 
 
 class Impurity(Metric, metaclass=abc.ABCMeta):
-    __problem_type__ = None
+    problem_type = None
 
     @abc.abstractstaticmethod
     def eval(self, y):
@@ -17,7 +17,7 @@ class Impurity(Metric, metaclass=abc.ABCMeta):
 
 
 class MeanSquaredError(Impurity):
-    __problem_type__ = "regression"
+    problem_type = "regression"
 
     @staticmethod
     @njit
@@ -77,7 +77,7 @@ class MeanSquaredError(Impurity):
 
 
 class GiniIndex(Impurity):
-    __problem_type__ = "binary_classification"
+    problem_type = "binary_classification"
 
     @staticmethod
     @njit
@@ -142,7 +142,7 @@ class GiniIndex(Impurity):
 
 
 class Entropy():
-    __problem_type__ = "binary_classification"
+    problem_type = "binary_classification"
 
     @staticmethod
     @njit

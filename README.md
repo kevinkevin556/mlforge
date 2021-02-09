@@ -60,14 +60,14 @@ Decorators are used to show to the essential parts of models and optimizers.
 
 ### Create your ML model
 
-All you have to do is to write functions **`_init__()`**, **`fit()`**, **`predict()`** and specify **`__estimator_type__`** for your model.
+All you have to do is to write functions **`_init__()`**, **`fit()`**, **`predict()`** and specify **`model_type`** for your model.
 
 ```Python
 from mlforge.base.models import Model
 from mlforge.utils import fit_method, predict_method
 
 class TestModel(Model):
-    __estimator_type__ = "binary_classification" # "binary_classification" or "regression"
+    model_type = "binary-classifier" # "binary-classifier" or "regressor"
 
     def __init__(self, optimizer, metrics):
         self.w_ = None                        # initialize the fitted result on your own

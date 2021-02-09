@@ -20,7 +20,7 @@ from ..utils.decorator_utils import fit_method, predict_method
 
 class BaggingPerceptron(Model):
 
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     meta_algorithm = Bagging(estimator=Perceptron())
 

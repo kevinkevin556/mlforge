@@ -1,7 +1,7 @@
 import numpy as np
 
 from ..base.optimizers import Optimizer
-from ..utils.initialize_utils import init_weight, set_x_train, set_y_train
+from ..utils.initialize_utils import set_X, set_y
 from ..impurities import MeanSquaredError, GiniIndex, Entropy
 from ..utils.decorator_utils import implementation
 from .node import Node
@@ -12,14 +12,14 @@ class DecisionStumpSolver(Optimizer):
         pass
 
     def execute(self, X, y):
-        x = set_x_train(X, add_bias=False)
-        y = set_y_train(y)
+        x = set_X(X, add_bias=False)
+        y = set_y(y)
 
         optimal_sign, feature, threshold = self.solve_split(x, y)
         return optimal_sign, feature, threshold
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="recursive_solution")
+    @implementation("DecisionStumpSolver", compile=None)
     def solve_split(self, x, y):
         split = None
         optimal_sign, feature, threshold = None, None, None
@@ -28,7 +28,7 @@ class DecisionStumpSolver(Optimizer):
         
         # d iterations, each iteration with O(N*logN) => O(d * NlogN) time
         for i in range(x.shape[1]): 
-            sorted_id = np.argsort(x[:, i], kind='stable') # O(N*logN)
+            sorted_id = np.argsort(x[:, i], kind="stable") # O(N*logN)
             xi_sorted = x[sorted_id, i]
             y_sorted = y[sorted_id]
             
@@ -47,7 +47,7 @@ class DecisionStumpSolver(Optimizer):
         return optimal_sign, feature, threshold
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="recursive_solution")
+    @implementation("DecisionStumpSolver", compile=None)
     def find_threshold(self, xi_sorted, pos):
         if pos == 0:
             threshold = xi_sorted[0] - 1
@@ -58,7 +58,7 @@ class DecisionStumpSolver(Optimizer):
         return threshold
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="recursive_solution")
+    @implementation("DecisionStumpSolver", compile=None)
     def recursively_solve(self, partition, partition_length):
         """ Solve the problem in divide and conquer approach.
 
@@ -111,8 +111,7 @@ class DecisionStumpSolver(Optimizer):
         return positive_ray, negative_ray, counts
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="recursive_solution")
-    @staticmethod
+    @implementation("DecisionStumpSolver", compile=None)
     def find_best_split(sign, front_split, front_counts, back_split, back_counts, midpoint):
         output = {}
         output["sign"] = sign
@@ -138,15 +137,15 @@ class CART(Optimizer):
         self.max_height = max_height
 
     def execute(self, X, y):
-        x = set_x_train(X, add_bias=False)
-        y = set_y_train(y)
+        x = set_X(X, add_bias=False)
+        y = set_y(y)
         
         root = self.build_tree(x, y)
         root.is_root_ = True
         
         return root
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("CART", compile=None)
     def build_tree(self, X, y, current_height=0):
         node = Node()
 
@@ -157,7 +156,7 @@ class CART(Optimizer):
 
         return node
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("CART", compile=None)
     def is_terminated(self, X, y, current_height):
         identical_ys = (len(np.unique(y)) == 1)
         identical_xs = np.apply_along_axis(arr=X, func1d=lambda x:len(np.unique(x))==1, axis=0).all()
@@ -167,7 +166,7 @@ class CART(Optimizer):
         return is_terminated
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("CART", compile=None)
     def create_leaf_node(self, node, y):
         node.is_leaf_ = True
 
@@ -181,7 +180,7 @@ class CART(Optimizer):
         return node
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("CART", compile=None)
     def create_sub_trees(self, node, X, y, current_height):
         # learn the best decision stump and split the data into 2 parts
         # left: X[n, feature] <= theta,  right: X[n, feature] > theta
@@ -194,7 +193,7 @@ class CART(Optimizer):
         return node
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("CART", compile=None)
     def solve_branches(self, X, y):
         min_impur = np.inf
         feature = None
@@ -233,8 +232,8 @@ class ID3(Optimizer):
 
     def execute(self, X, y):
         """ In ID3 decision tree, X should be categorical input."""
-        x = set_x_train(X, add_bias=False)
-        y = set_y_train(y)
+        x = set_X(X, add_bias=False)
+        y = set_y(y)
         
         root = self.build_tree(x, y)
         root.is_root_ = True
@@ -242,7 +241,7 @@ class ID3(Optimizer):
         return root
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("ID3", compile=None)
     def build_tree(self, X, y, features_remained=None):
         node = Node()
         features_remained = list(range(X.shape[1])) if not features_remained else features_remained
@@ -254,7 +253,7 @@ class ID3(Optimizer):
         
         return node
                 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("ID3", compile=None)
     def is_terminated(self, X, y, features_remained):
         no_feature_left = (len(features_remained) == 0)
         identical_ys = (len(np.unique(y)) == 1)
@@ -267,14 +266,14 @@ class ID3(Optimizer):
         is_terminated = (identical_xs or identical_ys or no_feature_left)
         return is_terminated
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("ID3", compile=None)
     def create_leaf_node(self, node, y):
         node.is_leaf_ = True
         y_values, counts = np.unique(y, return_counts=True)
         node.leaf_prediction_ = y_values[counts.argmax()]
         return node
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("ID3", compile=None)
     def create_sub_trees(self, node, X, y, features_remained):
         feature_chosen_id, branches = self.solve_branches(X[:, features_remained], y)
         feature_chosen = features_remained[feature_chosen_id]
@@ -288,7 +287,7 @@ class ID3(Optimizer):
         
         return node
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build tree")
+    @implementation("ID3", compile=None)
     def solve_branches(self, X, y):
         n = len(X)
         init_entropy = self.criterion.eval(y)
@@ -312,7 +311,6 @@ class ID3(Optimizer):
 
 
 class RandomTree(Optimizer):
-
     def __init__(self, criterion=None, tree=CART(), random_subspace=(0.5, ), **kwargs):
         self.random_subspace = random_subspace
         
@@ -327,15 +325,16 @@ class RandomTree(Optimizer):
 
 
     def execute(self, X, y):
-        x = set_x_train(X, add_bias=False)
-        y = set_y_train(y)
+        x = set_X(X, add_bias=False)
+        y = set_y(y)
 
         root = self.tree.build_tree(x, y)
         root.is_root_ = True
 
         return root
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build random tree")
+
+    @implementation("RandomTree", compile=None)
     def randomize(self, build_tree):
         def randomized_build_tree(X, y, *args, **kwargs):
             feature_projection = self.randomize_features(X.shape[1], self.random_subspace)
@@ -348,7 +347,7 @@ class RandomTree(Optimizer):
         return randomized_build_tree
 
 
-    @implementation(numba_jit=False, multiple_func_impl=True, func_group="build random tree")
+    @implementation("RandomTree", compile=None)
     def randomize_features(self, n_feature, random_subspace):
         def set_sample_num(n, total):
             if type(n) is float and n > 0 and n < 1:

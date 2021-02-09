@@ -9,7 +9,7 @@ from .optimizers import NaiveBayesSolver
 
 
 class NaiveBayes(Model):
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     def __init__(
         self, 

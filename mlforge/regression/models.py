@@ -11,7 +11,7 @@ from .optimizers import (AnalyticSolution, GradientDescent,
 
 class LinearRegression(Model):
     
-    __estimator_type__ = "regression"
+    model_type = "regressor"
 
     # Model Settings
     loss = losses.MeanSquaredError()
@@ -58,7 +58,7 @@ class LinearRegression(Model):
 
 class LogisticRegression(Model):
     
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     # Model Settings
     loss = losses.CrossEntropyError()
@@ -109,7 +109,7 @@ class LogisticRegression(Model):
 
 class RidgeRegression(Model):
     
-    __estimator_type__ = "regression"
+    model_type = "regressor"
 
     # Model Settings
     loss = losses.MeanSquaredError
@@ -158,7 +158,7 @@ class RidgeRegression(Model):
 
 class KernelLogisticRegression(Model):
 
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
     
     loss = losses.CrossEntropyError
     regularizer = regularizers.Tikhonov # set Gamma_square = K(x,x) in fit function
@@ -211,7 +211,7 @@ class KernelLogisticRegression(Model):
 
 class KernelRidgeRegression(Model):
 
-    __estimator_type__ = "regression"
+    model_type = "regressor"
 
     loss = losses.MeanSquaredError      # Linear regression of coef on K-based features
     regularizer = regularizers.Tikhonov # set Gamma_square = K(x,x) in fit function

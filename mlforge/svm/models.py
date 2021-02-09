@@ -12,7 +12,7 @@ from .optimizers import DualQpSolver, PrimalQpSolver
 
 class HardMarginSVM(Model):
 
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     def __init__(
         self,
@@ -66,7 +66,7 @@ class HardMarginSVM(Model):
 
 class SoftMarginSVM(Model):
 
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     def __init__(
         self,
@@ -133,7 +133,7 @@ class SoftMarginSVM(Model):
 
 class ProbabilisticSVM(Model):
 
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     svm = SoftMarginSVM()
     log_reg = LogisticRegression()
@@ -168,7 +168,7 @@ class ProbabilisticSVM(Model):
 
 class SVR(Model):
 
-    __estimator_type__ = "regression"
+    model_type = "regressor"
 
     def __init__(
         self, 

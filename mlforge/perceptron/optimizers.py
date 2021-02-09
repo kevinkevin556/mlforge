@@ -6,7 +6,7 @@ from ..losses import ZeroOneError, MeanSquaredError
 
 from ..utils.data_utils import add_cons
 from ..utils.decorator_utils import implementation
-from ..utils.initialize_utils import init_weight, set_x_train, set_y_train
+from ..utils.initialize_utils import init_weight, set_X, set_y
 from ..utils.operation_utils import sign, allclose
 
 
@@ -19,14 +19,14 @@ class LinearSeparable(Optimizer):
 
     def execute(self, x_train, y_train, loss=ZeroOneError()):
         lr = self.lr
-        x = set_x_train(x_train)
-        y = set_y_train(y_train)
+        x = set_X(x_train)
+        y = set_y(y_train)
         init_w = init_weight(x, y, method=self.init_method)
 
         return self.linear_separable_pla(x, y, init_w, lr)
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def linear_separable_pla(x, y, init_w, lr):
         w = init_w
         correct_counter = 0
@@ -54,8 +54,8 @@ class Pocket(Optimizer):
 
     def execute(self, x_train, y_train, loss=ZeroOneError(), updates=None):
         lr = self.lr
-        x = set_x_train(x_train)
-        y = set_y_train(y_train)
+        x = set_X(x_train)
+        y = set_y(y_train)
         init_w = init_weight(x, y, method=self.init_method)
         updates = self.updates if updates is None else updates
         return_pocket = self.return_pocket
@@ -68,7 +68,7 @@ class Pocket(Optimizer):
             return w
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def pocket(x, y, init_w, lr, updates):
         w = init_w
        
@@ -108,8 +108,8 @@ class GradientDescent(Optimizer):
 
 
     def execute(self, x_train, y_train, loss=MeanSquaredError(), epochs=None):
-        x = set_x_train(x_train)
-        y = set_y_train(y_train)
+        x = set_X(x_train)
+        y = set_y(y_train)
         init_w = init_weight(x, y, method=self.init_method)
         lr = self.lr
         epochs = self.epochs if epochs is None else epochs
@@ -123,7 +123,7 @@ class GradientDescent(Optimizer):
             return w
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def gradient_descent(x, y, init_w, lr, loss, iters):
         w = init_w
         while iters > 0:

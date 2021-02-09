@@ -11,7 +11,7 @@ from .optimizers import DecisionStumpSolver, CART, RandomTree
 
 
 class DecisionStump(Model):
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     def __init__(self, metrics=[metrics.Accuracy()]):
         self.feature_ = None
@@ -38,7 +38,7 @@ class DecisionStump(Model):
 
 
 class DecisionTree(Model):
-    __estimator_type__ = ["binary_classification", "regression"]
+    model_type = ["binary-classifier", "regressor"]
 
     def __init__(
         self,
@@ -47,7 +47,7 @@ class DecisionTree(Model):
         optimizer = CART(),
         metrics = [metrics.Accuracy()]
     ):
-        self.__estimator_type__ = criterion.__problem_type__
+        self.model_type = criterion.problem_type
         self.tree_ = None
         
         self.compile(criterion = criterion,
@@ -68,7 +68,7 @@ class DecisionTree(Model):
 
 
 class RandomForest(Model):
-    __estimator_type__ = ["binary_classification", "regression"]
+    model_type = ["binary-classifier", "regressor"]
 
     meta_algorithm = Bagging(DecisionTree())
 
@@ -79,7 +79,7 @@ class RandomForest(Model):
         metrics = [metrics.Accuracy()],
         **kwargs
     ):
-        self.__estimator_type__ = optimizer.criterion.__problem_type__
+        self.model_type = optimizer.criterion.problem_type
         self.compile(
             n_estimators = n_estimators,
             optimizer = optimizer,
@@ -131,15 +131,15 @@ class RandomForest(Model):
         correct_votes = np.empty(self.n_estimators)
         permuted_correct_votes = np.empty((X.shape[1], self.n_estimators))
         
-        if self.__estimator_type__ == "binary_classification":
+        if self.model_type == "binary-classifier":
             if raw:
                 metric = lambda y_pred, y_true: sum(y_pred == y_true)
             else:
                 metric = metrics.Accuracy()
-        elif self.__estimator_type__ == "regression":
+        elif self.model_type == "regressor":
             metric = metrics.R2()
         else:
-            raise ValueError("Invalid __estimator_type__")
+            raise ValueError("Invalid model_type")
             
         # (1) In every tree grown in the forest, put down the oob cases
         # and evaluate the metrics (accuracy for classification and r^2 for
@@ -172,7 +172,7 @@ class RandomForest(Model):
 
 
 class GradientBoostedDecisionTree(Model):
-    __estimator_type__ = "regression"
+    model_type = "regressor"
 
     def __init__(
         self,

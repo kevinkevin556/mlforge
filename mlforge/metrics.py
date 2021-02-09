@@ -2,6 +2,7 @@ import abc
 import numpy as np
 
 from .utils.data_utils import to_vector
+from .utils.decorator_utils import alias
 
 
 # data setter for metric evaluation
@@ -37,6 +38,7 @@ class Metric(metaclass = abc.ABCMeta):
 
 ##### Metrics Implemetations #####
 
+@alias("acc")
 class Accuracy(Metric):
     @staticmethod
     def eval(y_true, y_pred):

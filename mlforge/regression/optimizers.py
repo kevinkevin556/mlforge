@@ -8,15 +8,15 @@ from ..regularizers import Null, L1, L2, Tikhonov, is_instance
 
 from ..utils.data_utils import add_cons
 from ..utils.decorator_utils import implementation
-from ..utils.initialize_utils import init_weight, set_x_train, set_y_train
+from ..utils.initialize_utils import init_weight, set_X, set_y
 from ..utils.operation_utils import allclose
 
 
 
 class AnalyticSolution(Optimizer):
     def execute(self, X, y, regularizer=Null(), **kwargs):
-        x = set_x_train(X, **kwargs)
-        y = set_y_train(y)
+        x = set_X(X, **kwargs)
+        y = set_y(y)
         kernelgram_X = kwargs.get("kernelgram_X", False)
 
         if is_instance(regularizer, Null):
@@ -37,20 +37,20 @@ class AnalyticSolution(Optimizer):
         return w
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def analytic_solution_linear_regression(x, y):
         w = pinv(x) @ y
         return w
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def analytic_solution_ridge_regression(x, y, l2_regularizer):
         lambda_ = l2_regularizer.l
         w = inv((x.T @ x) + (lambda_ * np.identity(x.shape[1]))) @ (x.T @ y)
         return w
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def analytic_solution_gerneralized_ridge_regression(x, y, tikhonov_regularizer):
         lambda_ = tikhonov_regularizer.l
         gamma_square = tikhonov_regularizer.Gamma_square
@@ -61,7 +61,7 @@ class AnalyticSolution(Optimizer):
         #     are given by w_reg = (xᵀx + λΓᵀΓ)⁻¹(xᵀy)
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def analytic_solution_kernel_ridge_regression(x, y, regularizer):
         lambda_ = regularizer.l
         gamma_square = regularizer.Gamma_square
@@ -83,8 +83,8 @@ class GradientDescent(Optimizer):
 
     def execute(self, X, y, loss, regularizer=Null(), **kwargs):
         lr = self.lr
-        x = set_x_train(X, **kwargs)
-        y = set_y_train(y)
+        x = set_X(X, **kwargs)
+        y = set_y(y)
         init_w = init_weight(x, y, method=self.init_method)
 
         w = self.gradient_descent(x, y, init_w, lr, loss, regularizer)
@@ -96,7 +96,7 @@ class GradientDescent(Optimizer):
             return w
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def gradient_descent(x, y, init_w, lr, loss, regularizer):
         w = init_w
         while True:
@@ -123,8 +123,8 @@ class StocasticGradientDescent(Optimizer):
 
 
     def execute(self, X, y, loss, epochs=None, regularizer=Null(), **kwargs):
-        x = set_x_train(X, **kwargs)
-        y = set_y_train(y)
+        x = set_X(X, **kwargs)
+        y = set_y(y)
         init_w = init_weight(x, y, method=self.init_method)
         lr = self.lr
         epochs = self.epochs if (epochs is None) else epochs
@@ -140,7 +140,7 @@ class StocasticGradientDescent(Optimizer):
             return w 
 
 
-    @implementation(numba_jit=True)
+    @implementation( compile="numba")
     def stocastic_gradient_descent(x, y, init_w, lr, iters, loss, regularizer):
         w = init_w
         for _ in range(iters):

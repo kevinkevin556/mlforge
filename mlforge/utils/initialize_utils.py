@@ -51,7 +51,7 @@ def new_instance(model, mode="default"):
         raise ValueError("This model does not exist.")
 
 
-def set_x_train(x, add_bias=True, kernelgram_X=False):
+def set_X(x, add_bias=True, kernelgram_X=False):
     output = np.asarray(x)
 
     # (1) In some case we tackle constant terms and features
@@ -65,7 +65,7 @@ def set_x_train(x, add_bias=True, kernelgram_X=False):
     return output
 
 
-def set_y_train(y):
+def set_y(y):
     output = to_vector(y)
     output = np.array(output, dtype=np.float64)
     return output

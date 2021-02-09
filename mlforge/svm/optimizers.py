@@ -6,7 +6,7 @@ from ..base.optimizers import Optimizer
 from ..kernels import Kernel, Linear
 
 from ..utils.data_utils import add_cons
-from ..utils.initialize_utils import set_x_train, set_y_train
+from ..utils.initialize_utils import set_X, set_y
 from ..utils.decorator_utils import implementation
 
 
@@ -28,8 +28,8 @@ class PrimalQpSolver(Optimizer):
         if self.kernel is not None:
             warnings.warn("You are using primal Qp solver. Since some kernels have ill-implemented transformation function, use kernel carefully.")
 
-        x = set_x_train(self.kernel.transform(x_train), add_constant_terms=False)
-        y = set_y_train(y_train)
+        x = set_X(self.kernel.transform(x_train), add_constant_terms=False)
+        y = set_y(y_train)
 
         soft_margin_penalty = self.soft_margin_penalty
         tube_width = self.tube_width
@@ -42,7 +42,7 @@ class PrimalQpSolver(Optimizer):
             return self.primal_qp_svr(x, y, soft_margin_penalty, tube_width)
 
 
-    @implementation(numba_jit=False)
+    @implementation(compile=None)
     def primal_qp_hard_margin_svm(x, y):
         N = x.shape[0]  # number of data
         d = x.shape[1]  # dimension
@@ -62,7 +62,7 @@ class PrimalQpSolver(Optimizer):
         return b, w
 
 
-    @implementation(numba_jit=False)
+    @implementation(compile=None)
     def primal_qp_soft_margin_svm(x, y, soft_margin_penalty):
         N = x.shape[0]  # number of data
         d = x.shape[1]  # dimension
@@ -86,7 +86,7 @@ class PrimalQpSolver(Optimizer):
         return b, w
 
 
-    @implementation(numba_jit=False)
+    @implementation(compile=None)
     def primal_qp_svr(x, y, soft_margin_penalty, tube_width):
         print(x.shape)
         N = x.shape[0]  # number of data
@@ -128,8 +128,8 @@ class DualQpSolver(Optimizer):
 
 
     def execute(self, x_train, y_train):
-        x = set_x_train(x_train, add_constant_terms=False)
-        y = set_y_train(y_train)
+        x = set_X(x_train, add_constant_terms=False)
+        y = set_y(y_train)
         
         K = self.kernel.inner_product         # Kernel function (inner_product)
         soft_margin_penalty = self.soft_margin_penalty
@@ -144,7 +144,7 @@ class DualQpSolver(Optimizer):
             return self.dual_qp_svr(x, y, K, soft_margin_penalty, tube_width)
 
 
-    @implementation(numba_jit=False)
+    @implementation(compile=None)
     def dual_qp_hard_margin_svm(x, y, K):
         N = x.shape[0]
 
@@ -173,7 +173,7 @@ class DualQpSolver(Optimizer):
         return b, alpha, support_vector
 
     
-    @implementation(numba_jit=False)
+    @implementation(compile=None)
     def dual_qp_soft_margin_svm(x, y, K, soft_margin_penalty):
         N = x.shape[0]
         C = soft_margin_penalty
@@ -225,7 +225,7 @@ class DualQpSolver(Optimizer):
         return b, alpha, support_vector
 
 
-    @implementation(numba_jit=False)
+    @implementation(compile=None)
     def dual_qp_svr(x, y, K, soft_margin_penalty, tube_width):
         N = x.shape[0]
         C = soft_margin_penalty

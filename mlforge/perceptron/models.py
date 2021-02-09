@@ -8,7 +8,7 @@ from ..utils.operation_utils import sign
 from ..utils.decorator_utils import fit_method, predict_method
 
 class Perceptron(Model): 
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     loss = ZeroOneError()
 
@@ -30,7 +30,7 @@ class Perceptron(Model):
 
 
 class Adaline(Model):
-    __estimator_type__ = "binary_classification"
+    model_type = "binary-classifier"
 
     loss = MeanSquaredError()
 

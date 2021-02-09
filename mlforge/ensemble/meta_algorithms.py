@@ -26,7 +26,7 @@ class Blending(MetaAlgorithm, metaclass = abc.ABCMeta):
     def compile(self, **model_config):
         super().compile(**model_config)
         if getattr(self, "meta_model", None) is not None:
-            self.estimator_type = self.meta_model.__estimator_type__
+            self.estimator_type = self.meta_model.model_type
 
 
     def add(self, model):
@@ -71,14 +71,14 @@ class Voting(Blending):
             polls[:, i] = self.base_models[i].predict(X)
 
         # classification: find the class with the most polls 
-        if self.estimator_type == "binary_classification":
+        if self.estimator_type == "binary-classifier":
             def find_max_count(x):
                 value, count = np.unique(x, return_counts=True)
                 return value[count.argmax()]
             y_predict = np.apply_along_axis(find_max_count, axis=1, arr=polls)
         
         # regression: average the predictions to get the final fitting value
-        if self.estimator_type == "regression":
+        if self.estimator_type == "regressor":
             y_predict = np.mean(polls, axis=1)
         
         return y_predict
@@ -223,13 +223,13 @@ class Bagging(MetaAlgorithm):
         for i in range(self.n_estimators):
             polls[:, i] = self.base_models[i].predict(X)
 
-        if self.estimator_type == "binary_classification":
+        if self.estimator_type == "binary-classifier":
             def find_max_count(x):
                 value, count = np.unique(x, return_counts=True)
                 return value[count.argmax()]
             y_predict = np.apply_along_axis(lambda x:find_max_count(x), 1, polls)
         
-        if self.estimator_type == "regression":
+        if self.estimator_type == "regressor":
             y_predict = np.mean(polls, axis=1)
         
         return y_predict

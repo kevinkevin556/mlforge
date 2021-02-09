@@ -26,7 +26,7 @@ class Model(metaclass = abc.ABCMeta):
 # class attributes #
 
     # Scikit-learn Estimator Tags
-    __estimator_type__ = None
+    model_type = None
 
     # Model settings
     loss = None
@@ -178,7 +178,7 @@ class Model(metaclass = abc.ABCMeta):
             ma_kwargs = {ma_param: parameters[ma_param] for ma_param in meta_algo_params
                                              if ma_param in parameters}
             self.meta_algorithm.compile(**ma_kwargs)
-            self.__estimator_type__ = self.meta_algorithm.estimator_type
+            self.model_type = self.meta_algorithm.estimator_type
 
 
 
@@ -217,9 +217,9 @@ class Model(metaclass = abc.ABCMeta):
 
 
     def score(self, X, y):
-        if self.__estimator_type__ == "binary_classification":
+        if self.model_type == "binary-classifier":
             metric = metrics.Accuracy()
-        if self.__estimator_type__ == "regression":
+        if self.model_type == "regressor":
             metric = metrics.R2()
         return metric.eval(y, self.predict(X))
     
