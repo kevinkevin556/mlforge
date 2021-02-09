@@ -11,7 +11,7 @@ from ..regularizers import L2
 
 class MulticlassLogisticRegression(Model):
 
-    loss = losses.CrossEntropyError()
+    loss = losses.BinaryCrossEntropy()
 
     def __init__(
         self,

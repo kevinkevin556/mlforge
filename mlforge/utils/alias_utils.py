@@ -1,9 +1,13 @@
-alias_dict = {}
+import numba
 
+alias_dict = {}
 
 def register(alias_str, obj_class):
     global alias_dict
-    class_name  = obj_class.__name__
+    if str(obj_class.__class__.__name__) == "JitClassType":
+        class_name = obj_class.__bases__[0].__bases__[0].__name__
+    else:
+        class_name = obj_class.__bases__[0].__name__
     class_dict = {class_name: obj_class}
 
     if not alias_dict.get(alias_str, False): 

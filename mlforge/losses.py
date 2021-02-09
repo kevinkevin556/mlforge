@@ -1,6 +1,7 @@
 import numpy as np
 from numba.experimental import jitclass
 
+from .utils.decorator_utils import alias
 from .utils.operation_utils import logistic, sign
 
 
@@ -57,6 +58,7 @@ class Loss:
 
 ##### Losses Implementation #####
 
+@alias("0/1")
 @jitclass([])
 class ZeroOneError(Loss):
 	def eval(self, w, x_fit, y_true):
@@ -69,7 +71,7 @@ class ZeroOneError(Loss):
 		raise ValueError("0/1 Error is not derivativable.")
 
 
-
+@alias("mse")
 @jitclass([])
 class MeanSquaredError(Loss):
 	def eval(self, w, x_fit, y_true):
@@ -83,9 +85,9 @@ class MeanSquaredError(Loss):
 		return gradient
 
 
-
+@alias("bce")
 @jitclass([])
-class CrossEntropyError(Loss):
+class BinaryCrossEntropy(Loss):
 	def eval(self, w, x_fit, y_true):
 		n = len(y_true)
 		loss = (1/n) * np.sum(np.log(1 + np.exp(-y_true * (x_fit @ w))))

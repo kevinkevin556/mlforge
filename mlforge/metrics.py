@@ -48,6 +48,7 @@ class Accuracy(Metric):
         error = sum(y_pred == y_true)/n
         return error
 
+@alias("mse")
 class MeanSquaredError(Metric):
     @staticmethod
     def eval(y_true, y_pred):
@@ -57,6 +58,7 @@ class MeanSquaredError(Metric):
         error = sum((y_true - y_pred)**2)/n
         return error
 
+@alias("r2")
 class R2(Metric):
     @staticmethod
     def eval(y_true, y_pred):

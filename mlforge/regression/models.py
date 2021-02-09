@@ -61,7 +61,7 @@ class LogisticRegression(Model):
     model_type = "binary-classifier"
 
     # Model Settings
-    loss = losses.CrossEntropyError()
+    loss = losses.BinaryCrossEntropy()
 
     def __init__(
         self,
@@ -160,7 +160,7 @@ class KernelLogisticRegression(Model):
 
     model_type = "binary-classifier"
     
-    loss = losses.CrossEntropyError
+    loss = losses.BinaryCrossEntropy
     regularizer = regularizers.Tikhonov # set Gamma_square = K(x,x) in fit function
 
     def __init__(

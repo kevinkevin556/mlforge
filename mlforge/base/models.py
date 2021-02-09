@@ -136,9 +136,9 @@ class Model(metaclass = abc.ABCMeta):
 
     def compile(self, optimizer="None", metrics="None", **parameters):
         # Set optimizer and metrics
-        if optimizer is not "None":
+        if optimizer  != "None":
             self.optimizer = optimizer
-        if metrics is not "None":
+        if metrics != "None":
             self.metrics = metrics
         
         # Set other model parameters
